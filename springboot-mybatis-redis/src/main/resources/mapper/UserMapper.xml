@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hisign.finn.springboot.redis.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.hisign.finn.springboot.redis.domain.User">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="age" property="age"/>
+        <result column="sex" property="sex"/>
+        <result column="hobby" property="hobby"/>
+    </resultMap>
+
+    <parameterMap id="User" type="com.hisign.finn.springboot.redis.domain.User"/>
+
+    <sql id="Base_Column_List">
+        id, username, age, sex ,hobby
+    </sql>
+
+    <!-- 根据id查询用户信息-->
+    <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+          TB_USER
+        WHERE
+          ID = #{id}
+    </select>
+
+    <!-- 查询所有用户信息-->
+    <select id="list" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM TB_USER
+    </select>
+
+    <!-- 添加用户信息-->
+    <insert id="add" parameterType="com.hisign.finn.springboot.redis.domain.User">
+        INSERT INTO TB_USER
+        (
+            ID,
+            USERNAME,
+            AGE,
+            SEX,
+            HOBBY
+        ) VALUES (
+            #{id,jdbcType=INTEGER},
+            #{username,jdbcType=VARCHAR},
+            #{age,jdbcType=VARCHAR},
+            #{sex,jdbcType=VARCHAR},
+            #{hobby,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- 更新用户信息-->
+    <update id="update" parameterType="com.hisign.finn.springboot.redis.domain.User">
+      UPDATE TB_USER
+        <set>
+            <if test="username!=null and username!=''"> USERNAME=#{username,jdbcType=VARCHAR},</if>
+            <if test="age!=null and age!=''"> AGE=#{age,jdbcType=VARCHAR},</if>
+            <if test="sex!=null and sex!=''">SEX=#{sex,jdbcType=VARCHAR},</if>
+            <if test="hobby!=null and hobby!=''"> HOBBY=#{hobby,jdbcType=VARCHAR}</if>
+        </set>
+      WHERE
+        ID=#{id,jdbcType=INTEGER}
+    </update>
+
+    <!-- 删除用户信息-->
+    <delete id="delete" parameterType="java.lang.String">
+      DELETE FROM
+        TB_USER
+      WHERE
+        ID=#{id,jdbcType=INTEGER}
+    </delete>
+</mapper>
